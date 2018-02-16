@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>多指操作封装</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+    }
+    body,
+    html {
+      height: 100%;
+    }
+    .box {
+      width: 200px;
+      height: 200px;
+      background-color: #ff0000;
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      margin: auto;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="box" id="box">
+  </div>
+</body>
+<script>
+  // 移动端手势操作只有IOS有，安卓没有
+  /*
+    1,gesturestart：{
+      目标元素有两根或两根以上受伤触发
+      目标元素有一根且手机屏幕至少有一根手指触发
+    }
+  */
+  // 清空默认事件
+  (function () {
+    document.addEventListener('touchstart', function (e) {
+      e.preventDefault()
+    })
+    window.onload = function () {
+      var $ = function (selector) {
+        return document.querySelector(selector)
+      }
+      var $box = $('.box')
+      setGesture({
+        el: $box,
+        start: function (e) {
+
+        },
+        change: function () {
+
+        },
+        end: function () {
+
+        }
+      })
+
+      // 封装设置手势操作的函数;
+      /*
+      option = {
+        el: 必须
+        start:开始的函数
+        change:调用的函数
+        end:操作结束的函数
+      }
+      */
+      function setGesture(option) {
+        var isGesture = false
+        if (!option.el) {
+          return
+        }
+        var startDis = 1
+        var moveDis = 1
+        var scale = 1
+        var lastScale = 1
+        var startDeg = 0
+        var moveDeg = 0
+        var rotate = 0
+        var nowRotate = 0
+        var lastRotate = 0
+        option.el.style.transform = `scale(1.0) rotate(0deg)`
+        option.el.addEventListener('touchstart', function (e) {
+          var startPoint = []
+          if (e.targetTouches.length > 1) {
+            isGesture = true
+            startPoint[0] = {
+              x: e.targetTouches[0].pageX,
+              y: e.targetTouches[0].pageY
+            }
+            startPoint[1] = {
+              x: e.targetTouches[1].pageX,
+              y: e.targetTouches[1].pageY
+            }
+            startDis = getDis(startPoint[0], startPoint[1])
+            startDeg = getRotate(startPoint[0], startPoint[1])
+            lastScale = getScaleByMatrix(option.el)
+            lastRotate = getRotateByMatrix(option.el)
+            option.el.style.transform = `scale(${lastScale}) rotate(${lastRotate}deg)`
+            option.start && option.start.call(option.el, e)
+          } else if (e.targetTouches.length = 1) {
+            if (e.touches.length > 0) {
+              isGesture = true
+              startPoint[0] = {
+                x: e.touches[0].pageX,
+                y: e.touches[0].pageY
+              }
+              startPoint[1] = {
+                x: e.touches[1].pageX,
+                y: e.touches[1].pageY
+              }
+              startDis = getDis(startPoint[0], startPoint[1])
+              lastScale = getScaleByMatrix(option.el)
+              option.start && option.start.call(option.el, e)
+            }
+          }
+        })
+        option.el.addEventListener('touchmove', function (e) {
+          var movePoint = []
+          if (isGesture) {
+            movePoint[0] = {
+              x: e.touches[0].pageX,
+              y: e.touches[0].pageY
+            }
+            movePoint[1] = {
+              x: e.touches[1].pageX,
+              y: e.touches[1].pageY
+            }
+            moveDis = getDis(movePoint[0], movePoint[1])
+            scale = moveDis / startDis * lastScale
+            moveDeg = getRotate(movePoint[0], movePoint[1])
+            nowRotate = startDeg + moveDeg
+            option.el.style.transform = `scale(${scale}) rotate(${nowRotate}deg)`
+            option.change && option.change.call(option.el, e)
+          }
+        })
+        option.el.addEventListener('touchend', function (e) {
+
+        })
+      }
+      // 获取两个点之间的距离
+      function getDis(point1, point2) {
+        var x = Math.abs(point1.x - point2.x)
+        var y = Math.abs(point1.y - point2.y)
+        return Math.sqrt(Math.pow(x, 2), Math.pow(y, 2))
+      }
+
+      // 获取matrix参数
+      function getScaleByMatrix(el) {
+        var elTransform = window.getComputedStyle(el).transform
+        // 匹配括号里面的值
+        var reg = /\(.*\)/gi
+        var matrix = elTransform.match(reg)[0]
+        var matrixValue = matrix.substr(1, matrix.length - 2)
+        var matrixArr = matrixValue.split(',')
+        var a = Number(matrixArr[0])
+        var b = Number(matrixArr[1])
+        var c = Number(matrixArr[2])
+        var d = Number(matrixArr[3])
+        var e = Number(matrixArr[4])
+        var f = Number(matrixArr[5])
+        return Math.sqrt(Math.pow(a, 2), Math.pow(b, 2))
+      }
+      // 求出两点之间的斜率(弧度)转为角度
+      function getRotate(point1, point2) {
+        // 点（x,y）至原点的斜率与两点之间的斜率相等
+        var x = point1.x - point2.x
+        var y = point1.y - point2.y
+        return Math.atan2(y, x) * 180 / Math.PI;
+      }
+      // 获取旋转角度根据matrix
+      function getRotateByMatrix(el) {
+        var elTransform = window.getComputedStyle(el).transform
+        // 匹配括号里面的值
+        var reg = /\(.*\)/gi
+        var matrix = elTransform.match(reg)[0]
+        var matrixValue = matrix.substr(1, matrix.length - 2)
+        var matrixArr = matrixValue.split(',')
+        var a = Number(matrixArr[0])
+        var b = Number(matrixArr[1])
+        var c = Number(matrixArr[2])
+        var d = Number(matrixArr[3])
+        var e = Number(matrixArr[4])
+        var f = Number(matrixArr[5])
+        return Math.round(Math.atan2(b, a) * 180 / Math.PI)
+      }
+    }
+  })()
+</script>
+</html>

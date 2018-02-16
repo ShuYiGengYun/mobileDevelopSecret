@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <style>
+    body {
+      height: 100%;
+    }
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+    }
+
+    .box {
+      width: 300px;
+      height: 200px;
+      font-size: 20px;
+      color: #fff;
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      margin: auto;
+      background: url(./img/1.jpg) no-repeat;
+      background-size: cover;
+    }
+  </style>
+  <title>多指操作</title>
+</head>
+
+<body>
+  <div class="box" id="box">
+    多指操作
+  </div>
+</body>
+<script>
+  (function () {
+    document.addEventListener('touchstart', function (e) {
+      e.preventDefault()
+    })
+    window.onload = function () {
+      var box = document.querySelector('#box')
+      var lastScale = 1
+      var lastRotate =0
+      var currentScale = 1
+      var currentRotate = 0
+      box.style.transform = 'rotate(0deg)'
+      getStyleValueByType(box, 'rotate')
+      box.addEventListener('gesturestart', function (e) {
+        lastScale = getStyleValueByType(this, 'scale')
+        lastRotate = getStyleValueByType(this,'rotate')
+      })
+      box.addEventListener('gesturechange', function (e) {
+        // 旋转比率
+        var rotation = e.rotation
+        var scale = e.scale
+        currentScale = scale * lastScale
+        currentRotate = rotation+lastRotate
+        this.style.transform = `rotate(${currentRotate}deg) scale(${currentScale})`
+        // this.style.transform =`scale(${currentScale})`
+      })
+
+      // 获取缩放值
+      function getStyleValueByType(box, type) {
+        var boxStyle = window.getComputedStyle(box)
+        var boxTransform = boxStyle.transform
+        // 匹配括号里面的值
+        var reg = /\(.*\)/
+        var matrix = boxTransform.match(reg)[0]
+        var matrixValue = matrix.substr(1, matrix.length - 2)
+        var matrixArr = matrixValue.split(',')
+        var a = Number(matrixArr[0])
+        var b = Number(matrixArr[1])
+        var c = Number(matrixArr[2])
+        var d = Number(matrixArr[3])
+        var e = Number(matrixArr[4])
+        var f = Number(matrixArr[5])
+        if (type == 'scale') {
+          return Math.sqrt(a*a+b*b)
+        } else if (type == 'rotate') {
+          return Math.round(Math.atan2(b,a)*(180/Math.PI))
+        }
+      }
+
+      // 获取手指移动的角度
+      
+
+
+
+
+
+
+    }
+  })()
+</script>
+</html>

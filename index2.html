@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>摇一摇</title>
+  <style>
+      body{
+        padding: 0;
+        margin: 0;
+      }
+        height: 100%;
+      }
+      .container{
+        width: 200px;
+        height: 100px;
+        background-color: #ff0000;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        margin:auto;
+        color: #fff;
+        font-size: 20px;
+      }
+    </style>
+</head>
+<body>
+  <div class="container" id="box">
+
+  </div>
+</body>
+<script>
+  var box = document.querySelector('#box')
+  var MAX_RANGE = 80
+  var MIN_RANGE = 20
+  var lastX 
+  var lastY
+  var lastZ
+  var isShake = false
+  window.addEventListener('devicemotion', function (e) {
+    var motion = e.accelerationIncludingGravity
+    var x = Math.round(motion.x)
+    var y = Math.round(motion.y)
+    var z =Math.round(motion.z)
+    if (isAndriod()) {
+      x = -x
+      y = -y
+      z = -z
+    }
+    // 未定义
+    if(typeof lastX =='undefined'){
+       lastX = x
+       lastY = y
+       lastZ = z
+       return
+    }
+    var dis = Math.abs(x-lastX)+Math.abs(y-lastY)+Math.abs(z-lastZ)
+    if(dis >= MAX_RANGE){
+       isShake = true
+    } 
+    if(dis < MIN_RANGE && isShake==true){
+       isShake = false
+       alert('摇一摇已经结束') 
+      
+    }
+    lastX = x
+    lastY = y
+    lastZ = z
+
+  })
+
+  // 判断是否是安卓设备;
+  function isAndriod() {
+    var u = navigator.userAgent
+    return u.indexOf('Android') > -1 || u.indexOf('Adr') > -1
+  }
+</script>
+</html>

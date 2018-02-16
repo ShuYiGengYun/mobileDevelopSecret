@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>transform正面反面</title>
+  <style>
+    body {
+      margin: 0;
+    }
+
+    html,
+    body {
+      height: 100%;
+    }
+
+    .container {
+      width: 80%;
+      margin: auto;
+      border: 1px solid #000;
+      height: 300px;
+      position: relative;
+      perspective: 200px;
+      transform-style: preserve-3d;
+      position: relative;
+    }
+    .wrapper{
+      position: relative;
+      width: 300px;
+      height: 300px;
+      transform-style: preserve-3d;
+      perspective: 200px;
+      transition: 2s;
+    }
+    .container span {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100px;
+      height: 100px;
+      font-size: 20px;
+      line-height: 100px;
+      text-align: center;
+      color: #fff;
+      right: 0;
+      bottom: 0;
+      margin: auto;
+      transform-style: preserve-3d;
+      backface-visibility: hidden;
+      transform-style: preserve-3d;
+      opacity: 0.5;
+    }
+    .container span:first-of-type {
+      background-color: green;
+      transform: rotateY(180deg);
+    }
+    .container span:last-of-type {
+      background-color: red;
+    }
+    .container span em{
+      display: block;
+      font-size: 20px;
+      text-align: center;
+      color: #fff;
+      transform: translateZ(16px);
+    }
+  </style>
+</head>
+<body>
+  <div>test</div>
+  <div class="container" id="container">
+    <div class="wrapper" id="wrapper">
+      <span><em>正面</em></span>
+      <span><em>反面</em></span>
+    </div>
+  </div>
+</body>
+<script>
+  var $ = function (selector) {
+    return document.querySelector(selector)
+  }
+  var container = $('#container')
+  var wrapper = $('#wrapper')
+  var i = 1
+  var rotateDeg = 0
+  container.addEventListener('touchstart', function (e) {
+    rotateDeg += 180
+    wrapper.style.transform = `rotateY(${rotateDeg}deg)`
+  })
+</script>
+</html>

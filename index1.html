@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>重力加速度</title>
+  <style>
+    body{
+      padding: 0;
+      margin: 0;
+    }
+    body,html{
+      height: 100%;
+    }
+    .container{
+      width: 200px;
+      height: 100px;
+      background-color: #ff0000;
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      margin:auto;
+      color: #fff;
+      font-size: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container" id="box">
+
+  </div>
+</body>
+<script>
+  var box = document.querySelector('#box')
+  box.style.transform = `translateX(0px)`
+  window.addEventListener('devicemotion',function(e){
+    var motion = e.accelerationIncludingGravity
+    var x = Math.round(motion.x)
+    var y = motion.y
+    var z = motion.z
+    var tx = parseInt(box.style.transform.match(/\-?[0-9]+/)[0]) 
+    if(isAndriod()){
+      x = -x
+      y = - y
+      z = -z
+    }
+    tx+=x
+    box.style.transform =`translateX(${tx}px)`
+    box.innerHTML =`translateX(${tx}px)`
+  })
+
+  // 判断是否是安卓设备;
+  function isAndriod(){
+    var u = navigator.userAgent
+    return  u.indexOf('Android') > -1 || u.indexOf('Adr') > -1
+  }
+
+
+
+
+</script>
+</html>

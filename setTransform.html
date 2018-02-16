@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <script src="./js/setTransform.js"></script>
+  <title>setTransform</title>
+  <style>
+    body,html{
+      height: 100%;
+    }
+    body{
+      padding: 0;
+      margin: 0;
+    }
+    .container{
+      width: 100px;
+      height: 100px;
+      background-color: #ff0000;
+      margin: 0 auto;
+    }
+  </style>
+</head>
+<body>
+  <div class="container" id="container">
+
+  </div>
+</body>
+<script>
+  var $ = function(selector){
+      return document.querySelector(selector)
+  }
+  var container = $('#container')
+  var translateY =  setTransform(container,'translateY')
+  // 点击增加30度;
+  var clickCount = 0
+  container.addEventListener('touchstart',function(e){
+    var deg = setTransform(container,'rotateZ')
+    deg+=30
+    setTransform(container,'rotateZ',deg)
+    setTransform(container,'scale',0.5)
+  })
+</script>
+</html>

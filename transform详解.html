@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <style>
+    body{
+      margin: 0;
+      padding: 0;
+    }
+    body,html{
+      height: 100%;
+    }
+    .container{
+      width: 100px;
+      height: 100px;
+      background-color: #ff0000;
+      color: #fff;
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      margin: auto;
+    }
+    .container:last-of-type{
+      margin-top: 20px
+    }
+    
+  </style>
+  <title>transform详解</title>
+</head>
+<body>
+  <div class="container" id="container">
+    
+  </div>
+  <div class="container" id="wrapper">
+
+  </div>
+
+
+</body>
+<script>
+  /*
+    matrix(1,0,0,1,0,0)
+    matrix(a,b,c,d,e,f)
+    位移:
+       x轴: = e + xDis (ax+cy+e)(变换后的水平坐标)
+       y轴： = f + yDis (bx+dy+f)(变换后的垂直坐标)
+       
+    缩放：
+       x轴：
+        a = a*x
+        c = c*x
+        e = e*x
+      y轴 
+        b = b*y
+        d = d*y
+        f = f*y
+
+      斜切;
+        x:斜切(deg)
+        c = Math.tan(30*Math.PI/180)
+
+        y:斜切(deg)
+        b = Math.tan(30*Math.PI/180)
+
+        // 角度转弧度 = deg*Math.PI/180
+      旋转;(deg)
+      a = Math.cos(deg*Math.PI/180)
+      b = Math.sin(deg*Math.PI/180)
+      c = -Math.sin(deg*Math.PI/180)
+      d = Math.cos(deg*Math.PI/180)
+  */ 
+  // var a =1,b=Math.tan(30*Math.PI/180),c=Math.tan(30*Math.PI/180),d=1,e=0,f=0
+  var a=Math.cos(45*Math.PI/180),
+      b=Math.sin(45*Math.PI/180),
+      c=-Math.sin(45*Math.PI/180),
+      d=Math.cos(45*Math.PI/180),
+      e=0,
+      f=0
+  var $ = function(selector){
+    return document.querySelector(selector)
+  }
+  var container = $('#container')
+  var wrapper = $('#wrapper')
+  // 先移动再缩放
+  // container.style.transform = 'matrix(0.5,0,0,0.5,50,25)'
+  // wrapper.style.transform = 'scale(0.5) translate(100px,50px)'
+
+  // 斜切
+  container.style.transform = 'rotate(45deg)'
+  wrapper.style.transform =`matrix(${a},${b},${c},${d},${e},${f})`
+  console.log(getComputedStyle(container).transform)
+  
+  
+
+</script>
+</html>

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>transform3D</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    body,
+    html {
+      height: 100%;
+      position: relative;
+    }
+
+    .box {
+      width: 80%;
+      height: 300px;
+      border: 1px solid #000;
+      position: relative;
+      box-sizing: border-box;
+      margin: auto;
+      -webkit-perspective: 300px;
+      perspective: 300px;
+    }
+
+    .container {
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      top: 0;
+      right: 0;
+      width: 100px;
+      height: 100px;
+      background-color: #ff0000;
+      color: #fff;
+      margin: auto;
+      perspective: 200px;
+      -webkit-perspective: 200px;
+      transition: 2s;
+      transform-style: preserve-3d;
+      -webkit-transform-style:preserve-3d;
+      perspective-origin: 0 0;
+      }
+
+    .container .item {
+      display: block;
+      width: 100%;
+      height: 100%;
+      background-color: #00ff00;
+      position: absolute;
+      left: 0;
+      top: 0;
+      transform: rotateX(60deg);
+      transition: 2s;
+
+      
+    }
+  </style>
+</head>
+
+<body>
+  <div class="box">
+    <div class="container" id="container">
+      <span class="item"></span>
+    </div>
+  </div>
+</body>
+<script>
+  var $ = function (selector) {
+    return document.querySelector(selector)
+  }
+  // 3d旋转 
+  /*
+  perspective(景深)(加给父级)
+  */
+  window.onload = function () {
+    var container = $('#container')
+    container.addEventListener('touchstart',function(e){
+      this.style.transform = 'rotateY(360deg)'
+    })
+    
+
+  }
+</script>
+
+</html>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>横竖屏切换</title>
+  <style>
+    body,
+    html {
+      height: 100%;
+      margin: 0;
+    }
+    .container {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      left: 0;
+      top: 0;
+      background-color: #000;
+      color: #fff;
+      text-align: center;
+      line-height: 100%;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    请勿横屏浏览
+  </div>
+</body>
+<script>
+  (function () {
+    var container = document.querySelector('.container')
+    container.style.display = 'none'
+    var orientationAngle = window.orientation
+    alert(orientationAngle)
+    if(orientationAngle==(-90)||orientationAngle==90){
+       container.style.display = 'block'
+    }
+    window.addEventListener('orientationchange', function (e) {
+      orientationAngle = window.orientation
+      switch (orientationAngle) {
+        case 90:
+        case -90:
+        container.style.display = 'block'
+        break;
+        case 0:
+        container.style.display = 'none'
+      }
+    })
+  })()
+</script>
+
+</html>
